@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}
+  Лента записей
+{% endblock %}
+{% block content %}
+  <h1>Лента записей</h1>                        
+  {% for unique_post in post %}
+    <hr>
+    <article>
+      <ul>
+          <li>
+            Место: {{ unique_post.location }}
+          </li>
+          <li>
+            Дата: {{ unique_post.date }}
+          </li>
+          <li>
+            Категория: <a href="{% url 'blog:category_posts' unique_post.category %}">{{ unique_post.category }}</a>
+          </li>
+      </ul>          
+        <p>
+          {{ unique_post.text|truncatewords:10 }}
+        </p>
+        <a href="{% url 'blog:post_detail' unique_post.id %}">Читать полный текст</a>
+    </article>
+  {% endfor %}
+{% endblock %}
