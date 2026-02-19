@@ -49,21 +49,21 @@ posts_by_id = {post['id']: post for post in posts}
 
 
 def index(request):
-    '''
+    """
     Функция для отображения главной страницы блога.
     Посты выводятся в обратном порядке.
-    '''
+    """
     inverted_posts = list(reversed(posts))
     context = {'post': inverted_posts}
     return render(request, 'blog/index.html', context)
 
 
 def post_detail(request, post_id):
-    '''
+    """
     Функция для отображения подробной информации о посте по идентификатору.
     id: идентификатор поста.
     Вызывает исключение Http404, если пост с указанным id не найден.
-    '''
+    """
     try:
         post = posts_by_id[post_id]
     except KeyError:
@@ -73,9 +73,9 @@ def post_detail(request, post_id):
 
 
 def category_posts(request, category_slug):
-    '''
+    """
     Функция для отображения публикаций, принадлежащих к определённой категории.
     category_slug: категория.
-    '''
+    """
     context = {'category': category_slug}
     return render(request, 'blog/category.html', context)
