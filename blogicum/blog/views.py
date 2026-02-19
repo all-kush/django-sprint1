@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import Http404
 
 
 posts = [
@@ -44,25 +45,37 @@ posts = [
     }]
 
 
-# Create your views here.
+posts_by_id = {post['id']: post for post in posts}
+
+
 def index(request):
-    template = 'blog/index.html'
-    inverted_posts = posts[::-1]
+    '''
+    Функция для отображения главной страницы блога.
+    Посты выводятся в обратном порядке.
+    '''
+    inverted_posts = list(reversed(posts))
     context = {'post': inverted_posts}
-    return render(request, template, context)
+    return render(request, 'blog/index.html', context)
 
 
-def post_detail(request, id):
-    template = 'blog/detail.html'
-    context = {'post': posts[id]}
-    return render(request, template, context)
+def post_detail(request, post_id):
+    '''
+    Функция для отображения подробной информации о посте по идентификатору.
+    id: идентификатор поста.
+    Вызывает исключение Http404, если пост с указанным id не найден.
+    '''
+    try:
+        post = posts_by_id[post_id]
+    except KeyError:
+        raise Http404('Пост с указанным id не найден')
+    context = {'post': post}
+    return render(request, 'blog/detail.html', context)
 
 
 def category_posts(request, category_slug):
-    template = 'blog/category.html'
-    filtered_posts = [post for post in posts if post['category']
-                      == category_slug]
-    context = {
-        'post': filtered_posts,
-        'category': category_slug}
-    return render(request, template, context)
+    '''
+    Функция для отображения публикаций, принадлежащих к определённой категории.
+    category_slug: категория.
+    '''
+    context = {'category': category_slug}
+    return render(request, 'blog/category.html', context)
